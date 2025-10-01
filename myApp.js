@@ -37,7 +37,16 @@ const arrayOfPeople = [supermario, luigi];
 // 4️⃣ CRUD Functions
 
 const createAndSavePerson = (done) => {
-  supermario.save((err, data) => (err ? done(err) : done(null, data)));
+  const person = new Person({
+    name: "John Doe",
+    age: 30,
+    favoriteFoods: ["Pizza", "Pasta"]
+  });
+
+  person.save((err, data) => {
+    if (err) return done(err);
+    done(null, data);
+  });
 };
 
 const createManyPeople = (arrayOfPeople, done) => {
