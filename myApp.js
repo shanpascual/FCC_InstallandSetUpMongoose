@@ -102,12 +102,16 @@ const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
 
   Person.findOneAndUpdate(
-    { name: personName },
-    { age: ageToSet },
-    { new: true },
-    (err, updatedPerson) => (err ? done(err) : done(null, updatedPerson)),
+    { name: personName },      // search query
+    { age: ageToSet },         // update
+    { new: true },             // return the updated document
+    (err, updatedPerson) => {
+      if (err) return done(err);
+      done(null, updatedPerson);
+    }
   );
 };
+
 
 const removeById = (personId, done) => {
   Person.findByIdAndRemove(personId, (err, deletedPerson) =>
