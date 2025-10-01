@@ -1,6 +1,8 @@
+// myApp.js
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+// 1️⃣ Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -8,27 +10,31 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("MongoDB connected successfully"))
 .catch(err => console.error("MongoDB connection error:", err));
 
-const personSchema = {
-  name: {
-    type: String,
-    required: true,
-  },
+// 2️⃣ Define the schema and model
+const personSchema = new mongoose.Schema({
+  name: { type: String, required: true },
   age: Number,
   favoriteFoods: [String],
-};
+});
 
 const Person = mongoose.model("Person", personSchema);
+
+// 3️⃣ Sample person instances
 const supermario = new Person({
   name: "Super Mario",
   age: 40,
   favoriteFoods: ["Spaghetti"],
 });
+
 const luigi = new Person({
   name: "Luigi",
   age: 24,
   favoriteFoods: ["Spaghetti"],
 });
+
 const arrayOfPeople = [supermario, luigi];
+
+// 4️⃣ CRUD Functions
 
 const createAndSavePerson = (done) => {
   supermario.save((err, data) => (err ? done(err) : done(null, data)));
@@ -89,7 +95,7 @@ const removeById = (personId, done) => {
 
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
-  Person.remove({ name: nameToRemove }, (err, deletedPersons) =>
+  Person.deleteMany({ name: nameToRemove }, (err, deletedPersons) =>
     err ? done(err) : done(null, deletedPersons),
   );
 };
@@ -100,15 +106,14 @@ const queryChain = (done) => {
     .sort({ name: 1 })
     .limit(2)
     .select({ age: 0 })
-    .exec((err, deletedPersons) =>
-      err ? done(err) : done(null, deletedPersons),
+    .exec((err, data) =>
+      err ? done(err) : done(null, data),
     );
 };
 
 /** **Well Done !!**
- /* You completed these challenges, let's go celebrate !
- */
-
+ /* You completed these challenges, let's go celebrate ! */
+ 
 //----- **DO NOT EDIT BELOW THIS LINE** ----------------------------------
 
 exports.PersonModel = Person;
